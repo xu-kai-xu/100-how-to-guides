@@ -20,16 +20,11 @@ LLIST *llist_create(int size)
 
 int llist_insert(LLIST *ptr, const void *data, int mode)
 {
-    struct llist_node_st *newnode = malloc(sizeof(struct llist_node_st));
+    struct llist_node_st *newnode = malloc(sizeof(struct llist_node_st) + ptr->size);
     if (newnode == NULL) {
         return -1;
     }
-    newnode->data = malloc(ptr->size);
-    if (newnode->data == NULL) {
-        free(newnode);
-        newnode = NULL;
-        return -2;
-    }
+
     memcpy(newnode->data, data, ptr->size);
 
     if (mode == LLIST_FORWARD) {
@@ -71,7 +66,11 @@ static struct llist_node_st *find_(LLIST *ptr, const void *key, llist_cmp *cmp)
 
 void *llist_find(LLIST *ptr, const void *key, llist_cmp *cmp)
 {
-    return find_(ptr, key, cmp)->data;
+    struct llist_node_st *node = find_(ptr, key, cmp);
+    if (node == &(ptr->head)) {
+        return NULL;
+    }
+    return node->data;
 }
 
 int llist_delete(LLIST *ptr, const void *key, llist_cmp *cmp)
@@ -84,8 +83,6 @@ int llist_delete(LLIST *ptr, const void *key, llist_cmp *cmp)
     }
     node->prev->next = node->next;
     node->next->prev = node->prev;
-    free(node->data);
-    node->data = NULL;
     free(node);
     node = NULL;
     return 0;
@@ -105,8 +102,6 @@ int llist_fetch(LLIST *ptr, const void *key, llist_cmp *cmp, void *data)
     if (data != NULL) {
         memcpy(data, node->data, ptr->size);
     }
-    free(node->data);
-    node->data = NULL;
     free(node);
     node = NULL;
     return 0;
@@ -120,8 +115,6 @@ void llist_destory(LLIST *ptr)
 
     while (cur->next != &(ptr->head)) {
         next_node = cur->next;
-        free(cur->data);
-        cur->data = NULL;
         free(cur);
         cur = next_node;
     }
