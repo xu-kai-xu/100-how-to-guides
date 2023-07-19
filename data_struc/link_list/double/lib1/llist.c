@@ -4,33 +4,39 @@
 #include <stdlib.h>
 #include <string.h>
 
+struct llist_node_st {
+    struct llist_node_st *prev;
+    struct llist_node_st *next;
+    char data[0];   // 零长数组
+};
+
+struct llist_head_st {
+    int size;
+    struct llist_node_st head;
+};
+
 LLIST *llist_create(int size)
 {
-    LLIST *new = malloc(sizeof(LLIST));
+    struct llist_head_st *new = malloc(sizeof(struct llist_head_st));
     if (new == NULL) {
         return NULL;
     }
 
     new->size = size;
-    new->head.data = NULL;
     new->head.prev = &(new->head);
     new->head.next = &(new->head);
 
     return new;
 }
 
-int llist_insert(LLIST *ptr, const void *data, int mode)
+int llist_insert(LLIST *p, const void *data, int mode)
 {
-    struct llist_node_st *newnode = malloc(sizeof(struct llist_node_st));
+    struct llist_head_st *ptr = p;
+    struct llist_node_st *newnode = malloc(sizeof(struct llist_node_st) + ptr->size);
     if (newnode == NULL) {
         return -1;
     }
-    newnode->data = malloc(ptr->size);
-    if (newnode->data == NULL) {
-        free(newnode);
-        newnode = NULL;
-        return -2;
-    }
+
     memcpy(newnode->data, data, ptr->size);
 
     if (mode == LLIST_FORWARD) {
@@ -49,8 +55,9 @@ int llist_insert(LLIST *ptr, const void *data, int mode)
     return 0;
 }
 
-void llist_travel(LLIST * ptr, llist_op *op)
+void llist_travel(LLIST * p, llist_op *op)
 {
+    struct llist_head_st *ptr = p;
     struct llist_node_st *cur = ptr->head.next;
     while (cur != &(ptr->head)) {
         op(cur->data);  //回调函数
@@ -58,7 +65,7 @@ void llist_travel(LLIST * ptr, llist_op *op)
     }
 }
 
-static struct llist_node_st *find_(LLIST *ptr, const void *key, llist_cmp *cmp)
+static struct llist_node_st *find_(struct llist_head_st *ptr, const void *key, llist_cmp *cmp)
 {
     struct llist_node_st *cur = ptr->head.next;
     while (cur != &(ptr->head)) {
@@ -70,13 +77,19 @@ static struct llist_node_st *find_(LLIST *ptr, const void *key, llist_cmp *cmp)
     return cur;
 }
 
-void *llist_find(LLIST *ptr, const void *key, llist_cmp *cmp)
+void *llist_find(LLIST *p, const void *key, llist_cmp *cmp)
 {
-    return find_(ptr, key, cmp)->data;
+    struct llist_head_st *ptr = p;
+    struct llist_node_st *node = find_(ptr, key, cmp);
+    if (node == &(ptr->head)) {
+        return NULL;
+    }
+    return node->data;
 }
 
-int llist_delete(LLIST *ptr, const void *key, llist_cmp *cmp)
+int llist_delete(LLIST *p, const void *key, llist_cmp *cmp)
 {
+    struct llist_head_st *ptr = p;
     struct llist_node_st *node = find_(ptr, key, cmp);
     if (node == &(ptr->head))   // 找不到，返回头节点地址
     {
@@ -85,15 +98,14 @@ int llist_delete(LLIST *ptr, const void *key, llist_cmp *cmp)
     }
     node->prev->next = node->next;
     node->next->prev = node->prev;
-    free(node->data);
-    node->data = NULL;
     free(node);
     node = NULL;
     return 0;
 }
 
-int llist_fetch(LLIST *ptr, const void *key, llist_cmp *cmp, void *data)
+int llist_fetch(LLIST *p, const void *key, llist_cmp *cmp, void *data)
 {
+    struct llist_head_st *ptr = p;
     struct llist_node_st *node = find_(ptr, key, cmp);
     if (node == &(ptr->head))   // 找不到，返回头节点地址
     {
@@ -106,23 +118,20 @@ int llist_fetch(LLIST *ptr, const void *key, llist_cmp *cmp, void *data)
     if (data != NULL) {
         memcpy(data, node->data, ptr->size);
     }
-    free(node->data);
-    node->data = NULL;
     free(node);
     node = NULL;
     return 0;
 }
 
 
-void llist_destory(LLIST *ptr)
+void llist_destory(LLIST *p)
 {
+    struct llist_head_st *ptr = p;
     struct llist_node_st *cur = ptr->head.next;  //指向第一个有效节点
     struct llist_node_st *next_node = NULL;  //指向当前节点下一个节点
 
     while (cur->next != &(ptr->head)) {
         next_node = cur->next;
-        free(cur->data);
-        cur->data = NULL;
         free(cur);
         cur = next_node;
     }

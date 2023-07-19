@@ -30,7 +30,6 @@ static int name_cmp(const void *key, const void *record)
 {
     const char *k = (char *)key;
     const struct score_st *r = record;
-    printf("k = %s, record->data = %s\n", k, r->name);
     return strcmp(k, r->name);
 }
 

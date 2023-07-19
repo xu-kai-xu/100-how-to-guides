@@ -1,22 +1,13 @@
 #ifndef LLIST_H__
-#define LLIST_L__
+#define LLIST_H__
+
+typedef void LLIST;
 
 #define LLIST_FORWARD 1
 #define LLIST_BACKWORD 2
 
 typedef void llist_op(const void *);
 typedef int llist_cmp(const void *, const void *);
-
-struct llist_node_st {
-    void *data;
-    struct llist_node_st *prev;
-    struct llist_node_st *next;
-};
-
-typedef struct llist_node_head_st {
-    int size;
-    struct llist_node_st head;
-} LLIST;
 
 LLIST *llist_create(int size);
 
