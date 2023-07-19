@@ -49,13 +49,13 @@ int main()
         tmp.math = rand() % 100;
         tmp.chinese = rand() % 100;
 
-        ret = llist_insert(handler, &tmp, LLIST_BACKWORD);
+        ret = handler->insert(handler, &tmp, LLIST_BACKWORD);
         if (ret != 0) {
             exit(1);
         }
     }
-    llist_travel(handler, print_s);
-
+    handler->travel(handler, print_s);
+#if 0
     printf("\n=========test find\n\n");
 
     int id = 4;
@@ -86,7 +86,7 @@ int main()
     }
 
     llist_travel(handler, print_s);
-
+#endif
     llist_destory(handler);
     exit(0);
 }

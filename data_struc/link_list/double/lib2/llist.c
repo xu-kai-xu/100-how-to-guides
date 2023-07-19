@@ -4,6 +4,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+int llist_insert(LLIST *ptr, const void *data, int mode);
+void *llist_find(LLIST *ptr, const void *key, llist_cmp *cmp);
+int llist_delete(LLIST *ptr, const void *key, llist_cmp *cmp);
+int llist_fetch(LLIST *ptr, const void *key, llist_cmp *cmp, void *data);
+
+void llist_travel(LLIST *ptr, llist_op *op);
+
 LLIST *llist_create(int size)
 {
     LLIST *new = malloc(sizeof(LLIST));
@@ -14,6 +21,12 @@ LLIST *llist_create(int size)
     new->size = size;
     new->head.prev = &(new->head);
     new->head.next = &(new->head);
+
+    new->insert = llist_insert;
+    new->find = llist_find;
+    new->delete = llist_delete;
+    new->fetch = llist_fetch;
+    new->travel = llist_travel;
 
     return new;
 }

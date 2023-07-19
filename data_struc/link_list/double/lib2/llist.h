@@ -13,23 +13,17 @@ struct llist_node_st {
     char data[0];   // 零长数组
 };
 
-typedef struct llist_node_head_st {
+typedef struct llist_head {
     int size;
     struct llist_node_st head;
+    int (*insert)(struct llist_head *ptr, const void *data, int mode);
+    void *(*find)(struct llist_head *ptr, const void *key, llist_cmp *cmp);
+    int (*delete)(struct llist_head *ptr, const void *key, llist_cmp *cmp);
+    int (*fetch)(struct llist_head *ptr, const void *key, llist_cmp *cmp, void *data);
+    void (*travel)(struct llist_head *ptr, llist_op *op);
 } LLIST;
 
 LLIST *llist_create(int size);
-
-int llist_insert(LLIST *ptr, const void *data, int mode);
-
-void *llist_find(LLIST *ptr, const void *key, llist_cmp *cmp);
-
-int llist_delete(LLIST *ptr, const void *key, llist_cmp *cmp);
-
-int llist_fetch(LLIST *ptr, const void *key, llist_cmp *cmp, void *data);
-
-void llist_travel(LLIST *, llist_op *);
-
 void llist_destory(LLIST *);
 
 #endif /* LLIST_H__*/
