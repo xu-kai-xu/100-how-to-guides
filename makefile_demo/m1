@@ -1,0 +1,16 @@
+mytool: main.o tool_1.o tool_2.o
+	gcc main.o tool_1.o tool_2.o -o mytool
+
+main.o: main.c
+	gcc main.c -c -Wall -g -o main.o
+
+tool_1.o: tool_1.c
+	gcc tool_1.c -c -Wall -g -o tool_1.o
+
+tool_2.o: tool_2.c
+	gcc tool_2.c -c -Wall -g -o tool_2.o
+
+clean:
+	rm *.o mytool -f
+
+# 分清楚依赖和被依赖关系

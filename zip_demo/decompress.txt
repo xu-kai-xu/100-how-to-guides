@@ -1,0 +1,57 @@
+void decompress_files(const char *zip_file, const char *output_dir) {
+    unzFile uf = unzOpen(zip_file);
+    if (!uf) {
+        fprintf(stderr, "Error opening zip file for decompression: %s\n", zip_file);
+        exit(1);
+    }
+
+    if (unzGoToFirstFile(uf) != UNZ_OK) {
+        fprintf(stderr, "Error going to the first file in the zip.\n");
+        exit(1);
+    }
+
+    char output_file[BLOCK_SIZE];
+    char buffer[BLOCK_SIZE];
+    int err;
+    do {
+        if (unzGetCurrentFileInfo(uf, NULL, output_file, sizeof(output_file), NULL, 0, NULL, 0) != UNZ_OK) {
+            fprintf(stderr, "Error getting current file info.\n");
+            exit(1);
+        }
+
+        char full_output_path[BLOCK_SIZE];
+        snprintf(full_output_path, sizeof(full_output_path), "%s/%s", output_dir, output_file);
+
+        if (unzOpenCurrentFile(uf) != UNZ_OK) {
+            fprintf(stderr, "Error opening current file for extraction: %s\n", output_file);
+            exit(1);
+        }
+
+        FILE *fp = fopen(full_output_path, "wb");
+        if (!fp) {
+            fprintf(stderr, "Error opening output file for writing: %s\n", full_output_path);
+            exit(1);
+        }
+
+        int bytes_read;
+        while ((bytes_read = unzReadCurrentFile(uf, buffer, BLOCK_SIZE)) > 0) {
+            fwrite(buffer, 1, bytes_read, fp);
+        }
+
+        fclose(fp);
+
+        if (unzCloseCurrentFile(uf) != UNZ_OK) {
+            fprintf(stderr, "Error closing current file after extraction: %s\n", output_file);
+            exit(1);
+        }
+
+        err = unzGoToNextFile(uf);
+    } while (err == UNZ_OK);
+
+    if (err != UNZ_END_OF_LIST_OF_FILE) {
+        fprintf(stderr, "Error going to the next file in the zip.\n");
+        exit(1);
+    }
+
+    unzClose(uf);
+}

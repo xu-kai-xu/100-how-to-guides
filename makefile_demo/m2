@@ -1,0 +1,20 @@
+OBJS = main.o tool_1.o tool_2.o
+CC = gcc
+CFLAGS += -c -Wall -g
+
+mytool: $(OBJS)
+	$(CC) $(OBJS) -o mytool
+
+main.o: main.c
+	$(CC) main.c $(CFLAGS) -o main.o
+
+tool_1.o: tool_1.c
+	$(CC) tool_1.c $(CFLAGS) -o tool_1.o
+
+tool_2.o: tool_2.c
+	$(CC) tool_2.c $(CFLAGS) -o tool_2.o
+
+clean:
+	$(RM) *.o mytool
+
+# 分清楚依赖和被依赖关系
