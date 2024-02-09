@@ -7,6 +7,8 @@
 #define NR_BALL 27
 
 static int check(queue *qu) {
+    // 检查队列中的球，是否按从小到大排列
+    // 如果是，返回1；否则返回0
     int i = (qu->head + 1) % MAXSIZE;
 
     while (i != qu->tail) {
