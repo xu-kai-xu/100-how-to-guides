@@ -51,59 +51,63 @@ int main()
 
     qu_travel(qu);
 
-
     // 模拟
-    printf("开始模拟......\n");
-    int cur_ball, tmp_ball;
-    int tick_count = 0;
+    // 1. 从队列中取出一个球，放入分钟的栈中
+    int t = 0;
+    int value = 0;
+    int time = 0;
     while (1) {
-        if (qu_isempty(qu)) {
-            printf("tick_count = %d\n", tick_count);
-            printf("error: ball queue is empty.\n");
-            break;
-        }
-        qu_dequeue(qu, &cur_ball);
-        tick_count++;
+        qu_dequeue(qu, &t);
+        time++;
 
-        if (st_min->top < 4) {
-            st_push(st_min, &cur_ball);
-            continue;
+        // 分钟栈未满
+        if (st_min->top < 3) {
+            st_push(st_min, &t);
         } else {
-            while (!st_isempty(st_min)) {
-                st_pop(st_min, &tmp_ball);
-                qu_enqueue(qu, &tmp_ball);
+            // 分钟栈满，将分钟栈中的球放入队列
+            while(!st_isempty(st_min)) {
+                st_pop(st_min, &value);
+                qu_enqueue(qu, &value);
             }
-            qu_dequeue(qu, &tmp_ball);
-            st_push(st_fivemin, &tmp_ball);
-        }
 
-        if (st_fivemin->top < 11) {
-            continue;
-        } else {
-            while (!st_isempty(st_fivemin)) {
-                st_pop(st_fivemin, &tmp_ball);
-                qu_enqueue(qu, &tmp_ball);
+            // 如果5分钟栈未满，从队列中取一个球放到5分钟栈中
+            if (st_fivemin->top < 10) {
+                st_push(st_fivemin, &t);
+            } else {
+                //  5分钟栈满，将5分钟栈中的球出栈，放入队列
+                while (!st_isempty(st_fivemin)) {
+                    st_pop(st_fivemin, &value);
+                    qu_enqueue(qu, &value);
+                }
+
+                // 如果小时栈未满，从队列中取一个球放到小时栈中
+                if (st_hour->top < 10) {
+                    st_push(st_hour, &t);
+                } else {
+                    // 小时栈满，将小时栈中的球出栈，放入队列
+                    while (!st_isempty(st_hour)) {
+                        st_pop(st_hour, &value);
+                        qu_enqueue(qu, &value);
+                    }
+
+                    // 循环开始，出队列的球，需要重新放入队列，否则少一个球
+                    qu_enqueue(qu, &t);
+
+                    // 此时队列中的球数量为27，如果队列中的球是有序的，说明模拟结束
+                    if (check(qu)){
+                        break;
+                    }
+
+                    // 如果队列中的球不是有序的，说明模拟还未结束，将队列中的球重新放入小时栈中
+                    // qu_enqueue(qu, &t);
+                }
             }
-            qu_dequeue(qu, &tmp_ball);
-            st_push(st_hour, &tmp_ball);
         }
-
-        if (st_hour->top < 11) {
-            continue;
-        } else {
-            while (!st_isempty(st_hour)) {
-                st_pop(st_hour, &tmp_ball);
-                qu_enqueue(qu, &tmp_ball);
-            }
-        }
-
-        // 到这里，所有的球都已经回到了原来的队列中
-        qu_travel(qu);
-        printf("tick_count = %d\n", tick_count);
-        break;
     }
 
-    // 释放资源
+    printf("time = %d.\n", time);
+    qu_travel(qu);
+
     qu_destory(qu);
     st_destory(st_min);
     st_destory(st_fivemin);
@@ -111,3 +115,11 @@ int main()
 
     exit(0);
 }
+
+/*
+这个解法其实有个问题：
+比如分钟栈最多是5个。按说应该是，满了5个之后依次弹出，即如果原来有4个，也需要把第五个放进去之后
+再全部弹出。
+
+但现在的解法是，分钟栈最多只能有4个球，不能有5个球。
+*/
