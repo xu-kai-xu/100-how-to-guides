@@ -1,7 +1,7 @@
 #ifndef STACK_H__
 #define STACK_H__
 
-#include "lib2/llist.h"
+#include "llist.h"
 
 typedef LLIST STACK;
 

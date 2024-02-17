@@ -1,5 +1,5 @@
 #ifndef LLIST_H__
-#define LLIST_L__
+#define LLIST_H__
 
 #define LLIST_FORWARD 1
 #define LLIST_BACKWORD 2

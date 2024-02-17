@@ -3,4 +3,4 @@ llist: llist.o main.o
 	$(CC) $^ -o $@
 
 clean:
-	rm llist *.o -rf
+	rm -rf llist *.o
