@@ -66,26 +66,6 @@ git init
 
 ![image-20240302222557543](git入门.assets/image-20240302222557543.png)
 
-**分支操作**
-
-分支（git branch）是git最核心的概念。git对于文件和文件夹变更的跟踪、管理，都是基于分支进行的。git仓库虚拟化后，会创建一个默认的分支`master`，即主分支，见上面图中蓝色的master。
-
-一般的方法是，master分支作为正式对外发布的分支，留一个开发分支，或者主题分支做自己正在做的事情。比如我新建一个专门用于git入门文档编写的分支。
-
-首先查看当前已有的分支：`git branch`，发现只有master分支，然后新建分支：`git checkout -b how-to-git`，发现git自动切换到了新的分支，当然新分支是基于原有的master分支创建的，所以现在比较这两个分支，发现是没有差别的。
-
-比较分支的命令如下，`--stat`表示只列出统计信息，不列出具体差别。
-
-```
-git diff <branch-1> <branch-2> --stat
-```
-
-如果输出结果为空，说明两个分支相同。
-
-![image-20240303100935328](git入门.assets/image-20240303100935328.png)
-
-
-
 **提交修改**
 
 ```
@@ -111,9 +91,41 @@ git commit -m "project init"
 
 ![image-20240302224237761](git入门.assets/image-20240302224237761.png)
 
+**分支操作**
 
+分支（git branch）是git最核心的概念。git对于文件和文件夹变更的跟踪、管理，都是基于分支进行的。git仓库虚拟化后，会创建一个默认的分支`master`，即主分支，见上面图中蓝色的master。
+
+一般的方法是，master分支作为正式对外发布的分支，留一个开发分支，或者主题分支做自己正在做的事情。比如我新建一个专门用于git入门文档编写的分支。
+
+首先查看当前已有的分支：`git branch`，发现只有master分支，然后新建分支：`git checkout -b how-to-git`，发现git自动切换到了新的分支，当然新分支是基于原有的master分支创建的，所以现在比较这两个分支，发现是没有差别的。
+
+比较分支的命令如下，`--stat`表示只列出统计信息，不列出具体差别。
+
+```
+git diff <branch-1> <branch-2> --stat
+```
+
+如果输出结果为空，说明两个分支相同。
+
+![image-20240303100935328](git入门.assets/image-20240303100935328.png)
+
+此时`git status`命令会显示出你所在的分支和当前文件的变更情况。
+
+![image-20240303101240609](git入门.assets/image-20240303101240609.png)
+
+这里我们再做一次提交，创建多条提交记录/历史。
+
+此时再比较两个分支的差异，就有区别了：
+
+![image-20240303101544490](git入门.assets/image-20240303101544490.png)
+
+>   这里需要注意，`git diff branch-1 branch-2`后面跟的2个分支名，会以`branch-1`为基础去计算`branch-2`相对`branch-1`发生的改动。所以改变这两个参数，得到的差异是相反的（如上图和下图的关系）。
+
+![image-20240303102316575](git入门.assets/image-20240303102316575.png)
 
 **回退修改**
+
+回退修改的前提是需要有可以回退的位置，这里我们再做一次提交。
 
 **暂存修改**
 
@@ -123,26 +135,13 @@ git commit -m "project init"
 git init    # 初始化仓库
 git status  # 检查文件修改情况
 git add <file-name>/<directory> # 添加文件/文件夹
-```
 
-查看已有分支
+git branch  # 查看已有分支
+git checkout <branch-name>  # 切换到已有分支
+git checkout -b <new-branch-name>  # 基于当前所在分支切换到新的分支
 
-```
-git branch
-```
-
-切换到已有分支
-
-```
-git checkout <branch-name>
-```
-
-
-
-（基于已有分支）切换到新分支
-
-```
-git checkout -b <new-branch-name>
+git diff branch-1 branch-2 --stat  # 比较2个分支的差异
+git diff commit-1 commit-2 --stat  # 比较2个commit点的差异
 ```
 
 
