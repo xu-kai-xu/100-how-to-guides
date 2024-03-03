@@ -101,7 +101,7 @@ git commit -m "project init"
 
 比较分支的命令如下，`--stat`表示只列出统计信息，不列出具体差别。
 
-```
+```bash
 git diff <branch-1> <branch-2> --stat
 ```
 
@@ -133,7 +133,7 @@ git diff <branch-1> <branch-2> --stat
 
 回退修改，大体上有三种方法：
 
-```
+```bash
 git checkout <commit-d>
 git reset
 git revert
@@ -157,7 +157,7 @@ git revert
 
 这个时候的分支不是常规意义的分支，它可以理解为是在旧的提交点上继续修改，实际上是不合适的，所以按照提示新建一个常规分支：
 
-```
+```bash
 git switch -c git-doc-revert
 ```
 
@@ -171,13 +171,13 @@ git switch -c git-doc-revert
 
 下面这个命令的用法是，先切换到目标分支，然后在目标分支用这个命令，把修改所在的分支拉到目标分支。
 
-```
+```bash
 git merge <source-branch>
 ```
 
 下面图中，我切换到`how-to-git`分支后，想要把`git-doc-2`和`git-doc-revert`分支的内容合并到所在分支，所以用了命令
 
-```
+```bash
 git merge git-doc-2
 git merge git-doc-revert
 ```
@@ -194,11 +194,45 @@ git merge git-doc-revert
 
 略
 
+**删除分支**
+
+解决文件冲突后，当前分支`how-to-git`就带上了所有分支的修改，成为最新的分支，这样其他的分支就可以删除了。
+
+```bash
+git branch -d <branch-name>
+```
+
+![image-20240303110515879](./git入门.assets/image-20240303110515879.png)
+
+有些分支用`-d`删不掉，是因为这个分支的修改还没有被merge到别的分支，可以理解为，当git认为某个分支上有别的分支没有的修改时，就会向你确认是否删除这个分支。为了显示这条错误，我再提交一次，然后切换到`master`分支，删除``how-to-git`分支。
+
+![46d856a40af7316ea93b66122f7f77a](./git入门.assets/46d856a40af7316ea93b66122f7f77a.png)
+
+大概报错如下：
+
+```
+error: The branch 'how-to-git' is not fully merged.
+If you are sure you want to delete it, run 'git branch -D how-to-git'.
+```
+
+这种时候，如果确认这个分支已经没有什么利用价值，就可以用`-D`删除，但是，切记慎用。如果不确定，最好保留这个分支。
+
 **暂存修改**
+
+场景：某天，你正在分支a上修改a.txt文件，但是马上来了个着急的事情，需要你马上去修改b.txt文件。可是你的a文件已经改了一半，直接切分支又切不了，怎么办呢？
+
+```bash
+git stash save <memo-msg>
+git stash list
+git stash apply
+git stash pop
+```
+
+大体用法如下，不再展开细说。
 
 **git命令汇总**
 
-```
+```bash
 git init    # 初始化仓库
 git status  # 检查文件修改情况
 git add <file-name>/<directory> # 添加文件/文件夹
@@ -207,8 +241,29 @@ git branch  # 查看已有分支
 git checkout <branch-name>  # 切换到已有分支
 git checkout -b <new-branch-name>  # 基于当前所在分支切换到新的分支
 
+# 分支差异比较
 git diff branch-1 branch-2 --stat  # 比较2个分支的差异
 git diff commit-1 commit-2 --stat  # 比较2个commit点的差异
+
+# 回退修改
+git checkout <commit-d>  # 推荐这种回退方式
+git reset   # 慎用
+git revert  # 慎用
+
+# 由commit点新建分支
+git switch -c git-doc-revert
+
+# 分支合并
+git merge <source-branch>
+
+# 删除分支
+git branch -d <branch-name>
+
+# 暂存操作
+git stash save <memo-msg>  #暂存
+git stash list  # 查看所有的暂存
+git stash apply # 从暂存栈中读取最上面那一个，但不删除
+git stash pop   # 从暂存栈中拿出最上面那一个，暂存栈里不再有这个存盘点的暂存文件了
 ```
 
 
