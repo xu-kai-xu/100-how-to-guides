@@ -70,6 +70,7 @@ git init
 
 ```
 git add <file-name>
+git add .  # 把当前目录下的所有文件、文件夹都添加进去，慎用
 ```
 
 执行上面的命令，把所有想要让git记住的文件add一下。可以每次添加一个文件，也可以把整个文件夹添加进去。
@@ -236,6 +237,7 @@ git stash pop
 git init    # 初始化仓库
 git status  # 检查文件修改情况
 git add <file-name>/<directory> # 添加文件/文件夹
+git add .  # 添加当前路径下的所有文件和文件夹
 
 git branch  # 查看已有分支
 git checkout <branch-name>  # 切换到已有分支
