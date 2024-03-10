@@ -270,11 +270,184 @@ git stash pop   # 从暂存栈中拿出最上面那一个，暂存栈里不再�
 
 ## github 怎么用
 
+一个人的项目，使用git做版本控制没啥问题。但如果涉及到多人，总不能把那个项目文件夹复制来复制去吧。这时候就需要有一个项目托管平台，大家都基于这个平台上的项目版本，进行自己的本地修改，然后把自己的修改再提交到这个平台上。其他同学可以从平台上把别人的修改拉取下来。
+
 ### host文件修改
+
+由于GFW的存在，国内常常出现无法访问github的情况。一个比较简便的办法是修改host文件。具体操作方法参考下面的链接：
+
+```
+https://github.com/ineo6/hosts
+```
+
+建议使用SwitchHosts自动更新host文件，地址如下：
+
+```
+https://github.com/oldj/SwitchHosts/releases/tag/v4.1.2
+```
+
+
 
 ### 账号密码配置
 
-ssh https
+如果只是使用git，是不需要账户的，但是使用github，就需要账号了，要不然怎么区分不同的成员做的修改呢。申请账号的地方在下面，按照提示一步步做就好，这里不详细介绍。
+
+```
+https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F&source=header-home
+```
+
+现在的github网站做的相当不错，创建账号都是一场有趣的冒险。
+
+![image-20240310105354250](./git入门.assets/image-20240310105354250.png)
+
+申请好github账号后，需要在git中配置账户密码：
+
+```
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+
+git config --list  # 查看当前git配置
+```
+
+配置好之后，可以查看一下当前的配置，如下图：
+
+![image-20240310105900559](./git入门.assets/image-20240310105900559.png)
+
+### 新建github仓库
+
+把自己本地的git项目上传到github，首先得有地方可以上传，这就需要在github上新建一个仓库（`repository`，这个单词以后经常会见到）。
+
+![image-20240310110306302](./git入门.assets/image-20240310110306302.png)
+
+新建仓库需要确定仓库名字，我有一个写100篇教程的计划，所以就用下面这个名字了。然后还可以选择仓库是公开还是私有。所谓公开，就是别人可以看到你仓库的内容；所谓私有，就是只有你授权的人才可以看到。其他的选项可以自行研究。
+
+![image-20240310110423506](./git入门.assets/image-20240310110423506.png)
+
+仓库建好后，就会出现一些提示信息，这些信息非常有用，基本上可以不用任何别的教程完成项目文件的上传，这里不多介绍。
+
+![image-20240310110717861](./git入门.assets/image-20240310110717861.png)
+
+我们这里是创建仓库，所以按照上面图中的第一个红框下面的提示进行。因为我这个文件又进行了修改，所以需要先在本地提交一下当前的修改，然后再把本地仓库和github仓库关联起来。
+
+这里先分析一这段提示信息对应的命令内容：
+
+```
+echo "# 100-how-to-guides" >> README.md  # 把引号里的内容写到一个README.md的文件中，如果文件不存在，则新建
+git init  # 初始化仓库
+git add README.md  # 记录修改
+git commit -m "first commit"  # 提交修改
+git branch -M main  # 新建分支
+git remote add origin https://github.com/xu-kai-xu/100-how-to-guides.git  # 关联git与github，这一步我们下面会讲到
+git push -u origin main  # 把本地修改推送到github
+```
+
+其中新建文件的方式可以不用关注。初始化仓库、记录和提交修改、新建分支的操作前面章节git操作中都介绍过了。
+
+### 关联本地git项目与github仓库
+
+```
+git remote add origin <remote_repository_url>  # 添加一个github仓库，并且给它起名为origin
+git remote -v  # 查看当前git与哪些github仓库关联
+git remote remove origin  # 给当前叫origin的github仓库名改名字
+git remote rename origin  # 删除当前git仓库与叫origin的github仓库的关联
+```
+
+对于已经存在的仓库，可以通过下面图中的位置拿到github仓库的链接：
+
+![image-20240310112103075](./git入门.assets/image-20240310112103075.png)
+
+对于新建的仓库，稍微有点不一样：
+
+![image-20240310112129275](./git入门.assets/image-20240310112129275.png)
+
+总之，拿到链接以后在命令窗口输入就可以了。
+
+![image-20240310112222307](./git入门.assets/image-20240310112222307.png)
+
+>   为什么很多教程都给github仓库在本地取名为origin？
+>
+>   这就类似于**某人叫张三**一样，是git&githb通用的代名词，其实也可以取名为别的。
+
+### 推送本地修改到github
+
+```
+git push origin <local-branch>:<remoe-branch>
+```
+
+推送命令的完整用法如下上，表示把本地分支`<local-branch>`的内容，推送到`origin`代表的远端仓库的`remote-branch`分支。【这个命令建议牢记】
+
+如果本地分支与远端分支名字一样，可以缩写为
+
+```
+git push origin <local-branch>
+```
+
+如果是往`origin`表示的githb仓库的默认分支推送，还可以缩写为：
+
+```
+git push origin
+```
+
+如果是往默认远端仓库（`origin`）的默认分支（一般为`master`）推送，还可以简写为
+
+```
+git push
+```
+
+关于默认分支的修改，可以自行检索git命令的`-u`和 `–set-upstream`参数。
+
+这里我们先把之前git使用方法的内容提交到github上。
+
+### 认证
+
+我们之前只设置了自己github的账户也邮箱，而这些都是可以公开的信息。如果github只校验这些信息，那随便一个人都可以伪装成别人提交修改了，所以还需要别的校验方式，比如ssh，比如token。当前github已经放弃了密码校验方式，关于如何获取token，如何设置ssh，会放在别的教程中展开，此处不展开。
+
+当出现下面图中的提示时，可以选择在浏览器中打开，然后授权，基本上就可以完成校验了。
+
+![image-20240310113310522](./git入门.assets/image-20240310113310522.png)
+
+
+
+![image-20240310113346301](./git入门.assets/image-20240310113346301.png)
+
+当出现下面的内容时，说明提交成功了。此时再刷新github上那个新仓库，就可以发现里面有东西了。
+
+![image-20240310114032365](./git入门.assets/image-20240310114032365.png)
+
+这里把我的仓库链接贴一下：
+
+```
+https://github.com/xu-kai-xu/100-how-to-guides/tree/how-to-git
+```
+
+
+
+![image-20240310114410035](./git入门.assets/image-20240310114410035.png)
+
+github一个非常不错的地方在于，markdown文件可以预览，像下面这样：
+
+![image-20240310114433869](./git入门.assets/image-20240310114433869.png)
+
+至此，一个github仓库就建好了。
+
+### 工作流程
+
+基于github的简单工作流程如下：
+
+1.   如果是第一次创建项目，就从github拉取项目文件到本地。
+2.   如果本地已有项目，在进行新的修改之前，一定记得**从github拉取当前最新的项目记录**。
+3.   本地修改好后，按上一节的内容，本地提交修改。
+4.   把自己的修改推送到github上，这样大家就能看到你的修改了。
+
+### README是什么
+
+有些仓库打开是这样：
+
+![image-20240310114658249](./git入门.assets/image-20240310114658249.png)
+
+而我们的新仓库打开是这样：
+
+![image-20240310114719877](./git入门.assets/image-20240310114719877.png)
 
 
 
