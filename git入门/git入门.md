@@ -278,13 +278,13 @@ git stash pop   # 从暂存栈中拿出最上面那一个，暂存栈里不再�
 
 由于GFW的存在，国内常常出现无法访问github的情况。一个比较简便的办法是修改host文件。具体操作方法参考下面的链接：
 
-```
+```shell
 https://github.com/ineo6/hosts
 ```
 
 建议使用SwitchHosts自动更新host文件，地址如下：
 
-```
+```shell
 https://github.com/oldj/SwitchHosts/releases/tag/v4.1.2
 ```
 
@@ -304,7 +304,7 @@ https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F
 
 申请好github账号后，需要在git中配置账户密码：
 
-```
+```shell
 git config --global user.name "Your Name"
 git config --global user.email "your.email@example.com"
 
@@ -333,7 +333,7 @@ git config --list  # 查看当前git配置
 
 这里先分析一这段提示信息对应的命令内容：
 
-```
+```shell
 echo "# 100-how-to-guides" >> README.md  # 把引号里的内容写到一个README.md的文件中，如果文件不存在，则新建
 git init  # 初始化仓库
 git add README.md  # 记录修改
@@ -347,7 +347,7 @@ git push -u origin main  # 把本地修改推送到github
 
 ### 关联本地git项目与github仓库
 
-```
+```shell
 git remote add origin <remote_repository_url>  # 添加一个github仓库，并且给它起名为origin
 git remote -v  # 查看当前git与哪些github仓库关联
 git remote remove origin  # 给当前叫origin的github仓库名改名字
@@ -372,7 +372,7 @@ git remote rename origin  # 删除当前git仓库与叫origin的github仓库的�
 
 ### 推送本地修改到github
 
-```
+```shell
 git push origin <local-branch>:<remoe-branch>
 ```
 
@@ -380,19 +380,19 @@ git push origin <local-branch>:<remoe-branch>
 
 如果本地分支与远端分支名字一样，可以缩写为
 
-```
+```shell
 git push origin <local-branch>
 ```
 
 如果是往`origin`表示的githb仓库的默认分支推送，还可以缩写为：
 
-```
+```shell
 git push origin
 ```
 
 如果是往默认远端仓库（`origin`）的默认分支（一般为`master`）推送，还可以简写为
 
-```
+```shell
 git push
 ```
 
@@ -451,15 +451,37 @@ github一个非常不错的地方在于，markdown文件可以预览，像下面
 
 ![image-20240310114719877](./git入门.assets/image-20240310114719877.png)
 
+添加一个`README.md`文件之后就变成了这样：
 
+![image-20240310115317538](./git入门.assets/image-20240310115317538.png)
+
+可以理解为，这个`README.md`文件类似于一个项目的介绍说明。
 
 ## 一些参考
 
-git管理书稿 markdown
+git管理书稿 markdown，可以看看这个人的仓库：
 
-openpnm项目
+```
+https://github.com/xiaolai
+```
 
-李老师的git入门教程
+openpnm项目，我之前用过的一个开源项目：
 
-progit
+```
+https://github.com/xu-kai-xu/OpenPNM
+```
+
+一个不错的git入门教程
+
+```
+https://github.com/neolee/pilot/blob/master/x3-git-github.ipynb
+```
+
+progit，git官方出的文档，有简体中文版本。
+
+```
+https://git-scm.com/book/en/v2
+```
+
+
 
