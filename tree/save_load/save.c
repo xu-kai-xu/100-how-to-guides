@@ -111,9 +111,23 @@ void draw(struct node_st *root)
     printf("\n\n");
 }
 
-void save_(struct node_st *root, FILE *fp)
+int save_(struct node_st *root, FILE *fp)
 {
+    fputc('(', fp);
 
+    if (root == NULL) {
+        // 叶子节点的孩子
+        fputc(')', fp);
+        return 0;
+    }
+
+    fputc(root->data, fp);
+
+    save_(root->l, fp);
+    save_(root->r, fp);
+
+    fputc(')', fp);
+    return 0;
 }
 
 int save(struct node_st *root, const char *path)
