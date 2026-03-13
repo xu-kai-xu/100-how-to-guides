@@ -18,7 +18,7 @@ git@github.com:xu-kai-xu/100-how-to-guides.git
 
 ![image-20240406171545693](./github-ssh.assets/image-20240406171545693.png)
 
-使用ssh连接后，不需要每次访问都提供帐户名和密码。
+使用ssh连接后，不需要每次访问都提供账户名和密码。
 
 ## 本地生成密钥对
 
@@ -82,3 +82,6 @@ ssh -T git@github.com
 
 https://docs.github.com/en/authentication/connecting-to-github-with-ssh
 
+## 附，关于上一篇《理智与情感》的一点更正和说明
+
+那一篇写的更像是利己与利他的一点想法，中间夹杂了一些共情的内容，有些文不对题。大杂烩，说明思想还不清晰，浮于表面。
